@@ -1,4 +1,5 @@
 const express = require('express')
+  , Logger = require('./log4.js').getLogger('__filename')
   , app = express()
 
 require('./mongodb')
@@ -13,7 +14,7 @@ const cors = require('cors')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use('/public', express.static('public'))
+app.use('/logs', express.static('logs'))
 
 require('body-parser-xml')(bodyParser)
 app.use(bodyParser.xml({

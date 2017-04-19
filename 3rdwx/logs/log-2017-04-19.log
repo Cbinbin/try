@@ -1,0 +1,17 @@
+[2017-04-19 21:20:13.282] [INFO] console - Server is ruuning on port: 2345
+[2017-04-19 21:20:13.286] [INFO] console - Use Ctrl-C to stop
+[2017-04-19 21:20:13.302] [INFO] console - mongoose opened!
+[2017-04-19 21:23:03.796] [INFO] console - Server is ruuning on port: 2345
+[2017-04-19 21:23:03.801] [INFO] console - Use Ctrl-C to stop
+[2017-04-19 21:23:03.817] [INFO] console - mongoose opened!
+[2017-04-19 21:25:55.513] [INFO] console - {}
+[2017-04-19 21:27:17.007] [INFO] console - { Error: connect ETIMEDOUT 52.15.62.13:80
+    at Object.exports._errnoException (util.js:1023:11)
+    at exports._exceptionWithHostPort (util.js:1046:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1090:14)
+  code: 'ETIMEDOUT',
+  errno: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '52.15.62.13',
+  port: 80,
+  response: undefined }
