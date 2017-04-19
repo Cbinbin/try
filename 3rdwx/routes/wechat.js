@@ -1,9 +1,9 @@
 const router = require('express').Router()
   , request = require('superagent')
 
-router.post('/', (req, res)=> {
+router.get('/', (req, res)=> {
   console.log(req.body)
-  request.post('http://b671ad43.ngrok.io/wechat/accept')
+  request.post('b671ad43.ngrok.io/wechat/accept')
   .send({weixin: req.body})
   .end((err, result)=> {
     if(err) return console.log(err)
