@@ -23,6 +23,7 @@ router.post('/', (req, res)=> {
 router.post('/accept', (req, res)=> {
   console.log(req.body)
   var sss = wxutil(req.body.msg_signature, req.body.timestamp, req.body.nonce, token, req.body.xml.encrypt)
+  console.log(sss)
 })
 
 module.exports = router
