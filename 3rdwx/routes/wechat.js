@@ -27,7 +27,7 @@ router.post('/', (req, res)=> {
 router.post('/accept', (req, res)=> {
   var ssss = wxutil(req.body.msg_signature, req.body.timestamp, req.body.nonce, token, req.body.xml.encrypt)
   console.log(ssss)
-  var encrypt = req.body.xml.encrypt
+  var encrypt = req.body.xml.encrypt//'+KcSzmXyUTFAOqdtbgoUgCNXEu66Aevk3Q40mHTvjgtfErtVoBtiBUaNTBaTVRpmvB0eSn4RfT+XTGcD1h35mRS9hFl3dOE6+RbEN5S6dNd//VTP5gDkSMoScfh1HAocYriHu5HoXO9dXArAdfaM75xVO9fKZ5eS+g5RYSyCalcXy8HNmq0kPB/mcs4Y3AEf0lIfeSZloFFRb9sD9Z87duFR3mK3+H9PMZM5+w4uIV6r21x8Zex8EEvu2Jo+WwS8HVd4IBHCXWvfgNgXX4SX2tgI4f/A53UOsJYSv45JRGTnq0BBpV3JavI1eWgmt4cXUWac4pD5cyda/1LBuzUUG0PECJzMx8jySHqq4gi3WF9flMOS8HEOyRRcikXfdnlh7yScFsGD7jt7z2zcFIo46ThIbv7VylawxeouVr+1EiBFLDlz/3FpYDHAzdDHCKoIQrwOv6zniP2LcQvdwW45Rg=='
     , AESKey = base64.decode(EncodingAESKey + '=')
     , encrypt_dec = base64.decode(encrypt)
     , iv = AESKey.substr(0, 16)
