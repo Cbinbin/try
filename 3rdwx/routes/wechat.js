@@ -10,7 +10,7 @@ router.post('/', (req, res)=> {
   console.log(req.body, req.url)
   var ssss = wxutil(req.query.msg_signature, req.query.timestamp, req.query.nonce, token, req.body.xml.encrypt)
   console.log(ssss)
-  request.post('efc8b428.ngrok.ios/wechat/accept')
+  request.post('efc8b428.ngrok.io/wechat/accept')
   .send({
     xml: req.body.xml, 
     timestamp: req.query.timestamp,
