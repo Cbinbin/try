@@ -25,12 +25,13 @@ router.post('/', (req, res)=> {
   console.log(resultObj)//
   if(resultObj.appid === appId) {
     xml2jsonString(resultObj.msgXml, {async:true}, (err, resObj)=> {
+      if(err) return console.log({code: 506, errMsg: 'xml2json error', data: {} })
       ComponentVerifyTicket = resObj.xml.ComponentVerifyTicket
       console.log(resObj.xml)
       console.log(ComponentVerifyTicket)
     })
   } else {
-    console.log({code: 506, errMsg: 'Different appIds', data: {} })
+    console.log({code: 507, errMsg: 'Different appIds', data: {} })
   }
   res.send('success')
 })
@@ -52,7 +53,7 @@ router.post('/accept', (req, res)=> {
       res.send(resObj.xml)
     })
   } else {
-    res.send({code: 506, errMsg: 'Different appIds', data: {} })
+    res.send({code: 507, errMsg: 'Different appIds', data: {} })
   }
 })
 
