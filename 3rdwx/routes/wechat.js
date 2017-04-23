@@ -1,50 +1,65 @@
 const router = require('express').Router()
   , request = require('superagent')
   , crypto = require('crypto')
-  , wxutil = require('../wxutil')
-  , base64 = require('../Base64')
+  , url = require('url')
+  , verifySignature = require('../utils/verifySignature')
+  , wxBizMsgCrypto = require('../utils/wxBizMsgCrypto')
+  , xml2jsonString = require('xml2js').parseString
   , token = process.env.TOKEN
-  , EncodingAESKey = process.env.ENCODING_AESKEY
+  , encodingAesKey = process.env.ENCODING_AESKEY
+  , appId = process.env.APPID
+  , ComponentVerifyTicket = null
 
 router.post('/', (req, res)=> {
-  console.log(req.body, req.url)
-  var ssss = wxutil(req.query.msg_signature, req.query.timestamp, req.query.nonce, token, req.body.xml.encrypt)
-  console.log(ssss)
-  request.post('efc8b428.ngrok.io/wechat/accept')
-  .send({
-    xml: req.body.xml, 
-    timestamp: req.query.timestamp,
-    nonce: req.query.nonce,
-    msg_signature: req.query.msg_signature
-  })
-  .end((err, result)=> {
-    if(err) return console.log(err)
-    console.log('ok')
-  })
+  console.log(ComponentVerifyTicket) //原
+  var URL = url.parse(req.url, true)
+  if(URL.query.encrypt_type != 'aes') return console.log({code: 504, errMsg: 'It is not AES', data: {} })
+  var msg_sign = req.query.msg_signature
+    , timestamp = req.query.timestamp
+    , nonce = req.query.nonce
+    , xml = req.body.xml
+    , verifySignT = verifySignature(msg_sign, timestamp, nonce, token, xml.encrypt)
+  if(!verifySignT) return console.log({code: 505, errMsg: 'Illegal verification', data: {} })
+  var pc = new wxBizMsgCrypto(encodingAesKey, appId)
+    , resultObj = pc.decryptMsg(xml)
+  if(resultObj.appid === appId) {
+    xml2jsonString(resultObj.msgXml, {async:true}, (err, resObj)=> {
+      ComponentVerifyTicket = resObj.xml.ComponentVerifyTicket
+      console.log(resObj.xml)
+      console.log(ComponentVerifyTicket)
+    })
+  } else {
+    console.log({code: 506, errMsg: 'Different appIds', data: {} })
+  }
   res.send('success')
 })
 
 router.post('/accept', (req, res)=> {
-  var encrypt = '+KcSzmXyUTFAOqdtbgoUgCNXEu66Aevk3Q40mHTvjgtfErtVoBtiBUaNTBaTVRpmvB0eSn4RfT+XTGcD1h35mRS9hFl3dOE6+RbEN5S6dNd//VTP5gDkSMoScfh1HAocYriHu5HoXO9dXArAdfaM75xVO9fKZ5eS+g5RYSyCalcXy8HNmq0kPB/mcs4Y3AEf0lIfeSZloFFRb9sD9Z87duFR3mK3+H9PMZM5+w4uIV6r21x8Zex8EEvu2Jo+WwS8HVd4IBHCXWvfgNgXX4SX2tgI4f/A53UOsJYSv45JRGTnq0BBpV3JavI1eWgmt4cXUWac4pD5cyda/1LBuzUUG0PECJzMx8jySHqq4gi3WF9flMOS8HEOyRRcikXfdnlh7yScFsGD7jt7z2zcFIo46ThIbv7VylawxeouVr+1EiBFLDlz/3FpYDHAzdDHCKoIQrwOv6zniP2LcQvdwW45Rg=='
-    , AESKey = new Buffer(EncodingAESKey + '=', 'base64')
-    // , encrypt_dec = new Buffer(encrypt, 'base64')
-    , iv = AESKey.slice(0, 16)
-  var decipher = crypto.createDecipheriv('aes-256-cbc', AESKey, iv)
-  decipher.setAutoPadding(false)
-  var deciphered = Buffer.concat([decipher.update(encrypt, 'base64'), decipher.final()])
-  var pad = deciphered[deciphered.length - 1];
-  if (pad < 1 || pad > 32) {
-      pad = 0;
+  var msg_sign = 'xxx'
+    , timestamp = 000
+    , nonce = 000
+  var xml = {
+    encrypt: 'xxx'
   }
-  deciphered.slice(0, deciphered.length - pad)
+    , verifySignT = verifySignature(msg_sign, timestamp, nonce, token, xml.encrypt)
+  if(!verifySignT) return res.send({code: 505, errMsg: 'Illegal verification', data: {} })
+  var pc = new wxBizMsgCrypto(encodingAesKey, appId)
+    , resultObj = pc.decryptMsg(xml)
+  if(resultObj.appid === appId) {
+    xml2jsonString(resultObj.msgXml, {async:true}, (err, resObj)=> {
+      var ComponentVerifyTicket = resObj.xml.ComponentVerifyTicket
+      res.send(resObj.xml)
+    })
+  } else {
+    res.send({code: 506, errMsg: 'Different appIds', data: {} })
+  }
+})
 
-  // var demsg = decipher.update(encrypt_dec, 'binary', 'utf8')
-
-  // demsg = demsg.substring(16)
-  // demsg += decipher.final('utf8')
-  // var sss = wxutil(req.body.msg_signature, req.body.timestamp, req.body.nonce, token, req.body.xml.encrypt)
-  // console.log(sss)
-  res.send(deciphered)
+router.post('/encrypt', (req, res)=> {
+  const text = req.body.text
+  var pc = new wxBizMsgCrypto(encodingAesKey, appId)
+    , msg_encrypt = pc.encryptMsg(text)
+  res.send(msg_encrypt)
 })
 
 module.exports = router
