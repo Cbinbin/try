@@ -24,10 +24,10 @@ router.post('/', (req, res)=> {
     , resultObj = pc.decryptMsg(xml)
   console.log(resultObj)//
   if(resultObj.appid === appId) {
-    xml2jsonString(resultObj.msgXml, {async:true}, (err, resObj)=> {
+    xml2jsonString(resultObj.msgXml, {async:true}, (err, resMsgX)=> {
       if(err) return console.log({code: 506, errMsg: 'xml2json error', data: {} })
-      ComponentVerifyTicket = resObj.xml.ComponentVerifyTicket
-      console.log(resObj.xml)
+      ComponentVerifyTicket = resMsgX.xml.ComponentVerifyTicket
+      console.log(resMsgX.xml)
       console.log(ComponentVerifyTicket)
     })
   } else {
