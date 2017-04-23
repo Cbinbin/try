@@ -8,7 +8,7 @@ const router = require('express').Router()
   , token = process.env.TOKEN
   , encodingAesKey = process.env.ENCODING_AESKEY
   , appId = process.env.APPID
-  , ComponentVerifyTicket = null
+var ComponentVerifyTicket = null
 
 router.post('/', (req, res)=> {
   console.log(ComponentVerifyTicket) //原
