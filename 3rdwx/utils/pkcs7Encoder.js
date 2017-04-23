@@ -9,7 +9,7 @@ var pkcs7Encoder = {
     var amountToPad = blockSize - (textLength % blockSize)
     var result = new Buffer(amountToPad)
     result.fill(amountToPad)
-    return Buffer.concat([text, result])
+    return Buffer.concat([text, result])    //尾部填充
   },
   //删除解密后明文的补位字符
   decode: function(text) {

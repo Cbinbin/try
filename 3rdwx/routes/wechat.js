@@ -22,6 +22,7 @@ router.post('/', (req, res)=> {
   if(!verifySignT) return console.log({code: 505, errMsg: 'Illegal verification', data: {} })
   var pc = new wxBizMsgCrypto(encodingAesKey, appId)
     , resultObj = pc.decryptMsg(xml)
+  console.log(xml)
   if(resultObj.appid === appId) {
     xml2jsonString(resultObj.msgXml, {async:true}, (err, resObj)=> {
       ComponentVerifyTicket = resObj.xml.ComponentVerifyTicket

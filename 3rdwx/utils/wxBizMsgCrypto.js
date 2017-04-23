@@ -7,7 +7,6 @@ class wxBizMsgCrypto {
       throw new Error('please check arguments')
     }
     var AESKey = new Buffer(encodingAesKey + '=', 'base64')
-    console.log(AESKey.length)
     if(AESKey.length !== 32) {
       throw new Error('encodingAESKey invalid')
     }
