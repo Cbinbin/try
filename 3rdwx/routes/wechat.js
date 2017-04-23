@@ -26,7 +26,7 @@ router.post('/', (req, res)=> {
   if(resultObj.appid === appId) {
     xml2jsonString(resultObj.msgXml, {async:true}, (err, resMsgX)=> {
       if(err) return console.log({code: 506, errMsg: 'xml2json error', data: {} })
-      ComponentVerifyTicket = resMsgX.xml.ComponentVerifyTicket
+      ComponentVerifyTicket = resMsgX.xml.ComponentVerifyTicket[0]
       // console.log(resMsgX.xml)
       console.log(ComponentVerifyTicket)
     })
